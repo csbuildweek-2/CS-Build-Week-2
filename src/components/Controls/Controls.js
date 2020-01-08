@@ -271,12 +271,12 @@ class Controls extends Component {
 
 		// Get status
 		this.props.checkStatus();
-this.props.confirmSale()
+// this.props.confirmSale()
 		// Get cooldown and timestamp of last action
 		// const cooldown = JSON.parse(localStorage.getItem('cooldown'));
 		// Get traversal
 		// const traversal = JSON.parse(localStorage.getItem('traversal'));
-this.props.sellTreasure();
+// this.props.sellTreasure();
 
 
 

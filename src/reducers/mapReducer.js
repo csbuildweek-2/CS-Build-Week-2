@@ -20,6 +20,7 @@ const initialState = {
 	map: {},
 	path: [],
 	currentRoom: {},
+	title: '',
 	cooldown: 0,
 	busy: true
 };
@@ -69,7 +70,8 @@ const mapReducer = (state = initialState, action) => {
 				busy: false,
 				currentRoom: action.payload,
 				path: state.path.slice(1),
-				cooldown: action.payload.cooldown
+				cooldown: action.payload.cooldown,
+				title: action.payload.title
 			};
 
 		case MOVE_ERROR:

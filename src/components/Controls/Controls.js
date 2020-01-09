@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import axios from 'axios'
+
 // Actions
 import {
 	initialize,
@@ -9,7 +11,9 @@ import {
 	move,
 	updateMap,
 	updatePath,
-	sellTreasure,confirmSale
+	sellTreasure,
+	confirmSale,
+	manualMove
 } from '../../actions';
 
 import styled, { css } from 'styled-components';
@@ -41,18 +45,49 @@ const Movement = styled.div`
 const Actions = styled.div``;
 
 const Button = styled.button`
-display:flex; justify-content: column;
+	display:flex; 
+	justify-content: column;
 	font-size: 1.4rem;
 	background:white;
 	align-items:center;
 	margin-bottom: 10px;
 	border-radius:10px`;
 
+const DirectionalButton = styled.button`
+	font-size: 1.4rem;
+	background:white;
+	align-items:center;
+	border-radius:10px;
+	height: 40px
+	`
+
+const WeastButton = styled.button`
+	font-size: 1.4rem;
+	background:white;
+	align-items:center;
+	border-radius:10px;
+	width: 49%;
+	height: 40px
+	`
+
+const ManualMovement = styled.p`
+	border: 1px solid white;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	`
+	
+	const Weast = styled.div`
+	display: flex;
+	margin: 10px 0 10px;
+	justify-content: space-between;
+`
+
 class Controls extends Component {
 	state = {
 		timer: null,
 		cooldown: 999,
-		autoDiscover: false
+		autoDiscover: false,
 	};
 
 	tick = () => {
@@ -126,8 +161,13 @@ class Controls extends Component {
 		this.props.move([direction, prediction], this.cdReset);
 	};
 
+	manualMove = move => {
+		this.props.manualMove(move, this.cdReset)
+	}
+
 	addRoom = () => {
 		const coords = this.props.currentRoom.coordinates;
+		const title = this.props.currentRoom.title;
 
 		if (!this.props.map[coords]) {
 			console.log('New room discovered!');
@@ -181,6 +221,7 @@ class Controls extends Component {
 				{ coords, roomID, exits: localExits },
 				connections,
 				dimensions,
+				title,
 				this.lsMap
 			);
 		}
@@ -271,12 +312,12 @@ class Controls extends Component {
 
 		// Get status
 		this.props.checkStatus();
-this.props.confirmSale()
+		// this.props.confirmSale()
 		// Get cooldown and timestamp of last action
 		// const cooldown = JSON.parse(localStorage.getItem('cooldown'));
 		// Get traversal
 		// const traversal = JSON.parse(localStorage.getItem('traversal'));
-this.props.sellTreasure();
+		// this.props.sellTreasure();
 
 
 
@@ -294,36 +335,49 @@ this.props.sellTreasure();
 
 	render() {
 		return (
-			<ControlsContainer >
-				<Cooldown yellow={!this.props.busy && this.state.cooldown < 0}>
-					{this.props.busy
-						? 'Working...'
-						: this.state.cooldown >= 0
-						? `Cooldown: ${this.state.cooldown.toFixed(0)}s`
-						: `Cooldown: ${-this.state.cooldown.toFixed(0)}s ago`}
-				</Cooldown>
-				<Movement>
-					<Button
-						onClick={() => {
-							this.setState({ autoDiscover: !this.state.autoDiscover });
-							console.log('autoDiscover', !this.state.autoDiscover);
-						}}
-					>
-						Discover Rooms
-					</Button>
-					<Button>Collect Treasure</Button>
-					<Button>Return to Shop</Button>
-					<Button>Move to Room</Button>
-				</Movement>
+			<div>
+				<ControlsContainer >
+					<Cooldown yellow={!this.props.busy && this.state.cooldown < 0}>
+						{this.props.busy
+							? 'Working...'
+							: this.state.cooldown >= 0
+							? `Cooldown: ${this.state.cooldown.toFixed(0)}s`
+							: `Cooldown: ${-this.state.cooldown.toFixed(0)}s ago`}
+					</Cooldown>
+					<Movement>
+						<Button
+							onClick={() => {
+								this.setState({ autoDiscover: !this.state.autoDiscover });
+								console.log('autoDiscover', !this.state.autoDiscover);
+							}}
+						>
+							Discover Rooms
+						</Button>
+						<Button>Collect Treasure</Button>
+						<Button>Return to Shop</Button>
+						<Button>Move to Room</Button>
+					</Movement>
 
-				<Actions>
-					<Button onClick={()=>this.props.sellTreasure("User 20306")}>Auto Sell</Button>
-					<Button onClick={()=>this.props.confirmSale("User 20306")}  >Confirm sell</Button>
-					{/* <Button>Set Max Encumbrance</Button> */}
-					<Button onClick={this.props.checkStatus}>Update Your Status</Button>
-					<Button>Change Your Name</Button>
-				</Actions>
-			</ControlsContainer>
+					<Actions>
+						<Button onClick={()=>this.props.sellTreasure("User 20306")}>Auto Sell</Button>
+						<Button onClick={()=>this.props.confirmSale("User 20306")}  >Confirm sell</Button>
+						{/* <Button>Set Max Encumbrance</Button> */}
+						<Button onClick={this.props.checkStatus}>Update Your Status</Button>
+						<Button>Change Your Name</Button>
+					</Actions>
+
+				</ControlsContainer>
+
+				<ManualMovement>
+					<DirectionalButton onClick = {() => this.manualMove('n')}>N</DirectionalButton>
+					<Weast>
+						<WeastButton onClick = {() => this.manualMove('w')}>W</WeastButton>
+						<WeastButton onClick = {() => this.manualMove('e')}>E</WeastButton>
+					</Weast>
+					<DirectionalButton onClick = {() => this.manualMove('s')}>S</DirectionalButton>
+				</ManualMovement>
+
+			</div>
 		);
 	}
 }
@@ -339,5 +393,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ initialize, checkStatus, move, updateMap, updatePath,sellTreasure,confirmSale }
+	{ initialize, checkStatus, move, updateMap, updatePath, sellTreasure, confirmSale, manualMove }
 )(Controls);

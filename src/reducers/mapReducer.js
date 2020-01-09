@@ -21,7 +21,7 @@ const initialState = {
 	path: [],
 	currentRoom: {},
 	cooldown: 0,
-	busy: true
+	busy: true,
 };
 
 const mapReducer = (state = initialState, action) => {
@@ -69,7 +69,7 @@ const mapReducer = (state = initialState, action) => {
 				busy: false,
 				currentRoom: action.payload,
 				path: state.path.slice(1),
-				cooldown: action.payload.cooldown
+				cooldown: action.payload.cooldown,
 			};
 
 		case MOVE_ERROR:
@@ -102,7 +102,7 @@ const mapReducer = (state = initialState, action) => {
 
 		// update map
 		case UPDATE_MAP:
-			const { newRoom, connections, dimensions } = action.payload;
+			const { newRoom, connections, dimensions, title } = action.payload;
 			const { coords, roomID, exits } = newRoom;
 
 			let newMap = { ...state.map };
@@ -125,7 +125,7 @@ const mapReducer = (state = initialState, action) => {
 				map: {
 					...newMap,
 					dimensions,
-					[coords]: { roomID, exits }
+					[coords]: { title, roomID, exits }
 				}
 			};
 

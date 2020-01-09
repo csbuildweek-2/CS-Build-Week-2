@@ -98,6 +98,25 @@ export const move = ([direction, prediction], callback) => {
 	};
 };
 
+export const manualMove = (move, callback) => {
+	return dispatch => {
+		dispatch({ type: MOVE });
+
+		axios
+			.post('https://lambda-treasure-hunt.herokuapp.com/api/adv/move/', {
+				direction: move
+			})
+
+			.then(async ({ data }) => {
+				// await sleep(1000);
+				dispatch({ type: MOVE_SUCCESS, payload: data });
+				callback(data.cooldown);
+			})
+
+			.catch(error => dispatch({ type: MOVE_ERROR, payload: error }));
+	};
+};
+
 export const takeTreasure = name => {
 	return dispatch => {
 		dispatch({ type: TAKE_TREASURE });
@@ -171,11 +190,11 @@ export const confirmSale = name => {
 	};
 };
 
-export const updateMap = (newRoom, connections, dimensions, callback) => {
+export const updateMap = (newRoom, connections, dimensions, title, callback) => {
 	return dispatch => {
 		dispatch({
 			type: UPDATE_MAP,
-			payload: { newRoom, connections, dimensions }
+			payload: { newRoom, connections, title, dimensions }
 		});
 		callback();
 	};

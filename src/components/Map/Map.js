@@ -40,8 +40,18 @@ const Row = styled.div`
 	display: flex;
 `;
 
+const RoomsList = styled.div`
+	font-size: 20px
+`;
+
+const R = styled.div`
+	font-size: 15px
+`;
+
 class Map extends Component {
-	state = {};
+	state = {
+		importantRooms: []
+	};
 
 	buildMap = () => {
 		const path = this.props.path.map(room => room[1]);
@@ -167,6 +177,19 @@ class Map extends Component {
 	}
 
 	render() {
+
+		if(this.props.currentRoom.title === 'Store'){
+			this.state.importantRooms.push(this.props.currentRoom)
+		}
+
+		if(this.props.currentRoom.title === 'Pirate Ry'){
+			this.state.importantRooms.push(this.props.currentRoom)
+		}
+
+		if(this.props.currentRoom.title === 'Shrine'){
+			this.state.importantRooms.push(this.props.currentRoom)
+		}
+
 		return (
 			<MapContainer>
 				<MapFrame>
@@ -176,6 +199,14 @@ class Map extends Component {
 						<MapWrapper>{this.buildMap()}</MapWrapper>
 					)}
 				</MapFrame>
+
+				{console.log(this.props.currentRoom, 'Curr Room')}
+				{`Room title: ${this.props.currentRoom.title}`}
+				<br />
+				{`Room description: ${this.props.currentRoom.description}`}
+				<br />
+				{`Room items: ${this.props.currentRoom.items}`}
+				<br />
 
 				{'Current Room: ' +
 					(this.props.currentRoom.room_id
@@ -189,6 +220,14 @@ class Map extends Component {
 				{'Path: ' + JSON.stringify(this.props.path)}
 				<br />
 				{`Current Cooldown: ${this.props.cooldown}s`}
+
+				{/* <RoomsList>
+					Items: {this.props.currentRoom.items.map(room => 
+						<R>
+							{room}
+						</R>
+					)}
+				</RoomsList> */}
 
 				{/* <p>{`Current Room: ${JSON.stringify(this.props.currentRoom)}`}</p> */}
 			</MapContainer>

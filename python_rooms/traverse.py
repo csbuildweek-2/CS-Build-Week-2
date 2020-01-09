@@ -557,6 +557,6 @@ def bfs(starting_vertex, destination_vertex):
                     path_copy.append(roomGraph[v][1][neighbor])
                     queue.enqueue(path_copy)
 
-bfs(7,467)
+bfs(22,176)
 
 

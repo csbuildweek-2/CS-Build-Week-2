@@ -191,46 +191,13 @@ class Map extends Component {
 		}
 
 		return (
-			<MapContainer>
-				<MapFrame>
-					{!this.props.map.dimensions ? (
-						'Welcome, adventurer.'
-					) : (
-						<MapWrapper>{this.buildMap()}</MapWrapper>
-					)}
-				</MapFrame>
-
-				{console.log(this.props.currentRoom, 'Curr Room')}
-				{`Room title: ${this.props.currentRoom.title}`}
-				<br />
-				{`Room description: ${this.props.currentRoom.description}`}
-				<br />
-				{`Room items: ${this.props.currentRoom.items}`}
-				<br />
-
-				{'Current Room: ' +
-					(this.props.currentRoom.room_id
-						? `${this.props.currentRoom.room_id} ${
-								this.props.currentRoom.coordinates
-						  }`
-						: '?')}
-				<br />
-				{'Rooms discovered: ' + Object.keys(this.props.map).length}
-				<br />
-				{'Path: ' + JSON.stringify(this.props.path)}
-				<br />
-				{`Current Cooldown: ${this.props.cooldown}s`}
-
-				{/* <RoomsList>
-					Items: {this.props.currentRoom.items.map(room => 
-						<R>
-							{room}
-						</R>
-					)}
-				</RoomsList> */}
-
-				{/* <p>{`Current Room: ${JSON.stringify(this.props.currentRoom)}`}</p> */}
-			</MapContainer>
+			<MapFrame>
+				{!this.props.map.dimensions ? (
+					'Welcome, adventurer.'
+				) : (
+					<MapWrapper>{this.buildMap()}</MapWrapper>
+				)}
+			</MapFrame>
 		);
 	}
 }

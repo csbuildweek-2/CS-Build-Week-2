@@ -16,13 +16,10 @@ const HomeContainer = styled.div`
 class Home extends Component {
 	render() {
 		return (
-			<HomeContainer>
-			
-			<Controls />
-			<Info />
+			<HomeContainer>	
+				<Controls />
+				<Info />
 				<Map />
-				
-				<Inventory />
 			</HomeContainer>
 		);
 	}

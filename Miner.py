@@ -25,8 +25,10 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    last_hash = json.dumps(last_proof, sort_keys=True).encode()
-    last_hash = hashlib.sha256(last_hash).hexdigest()
+    last_hash = json.dumps(last_proof, sort_keys=True)
+    print(last_hash, 'pre')
+    # last_hash = hashlib.sha256(last_hash).hexdigest()
+    # print(last_hash, 'post')
     proof = 42
     #  TODO: Your code here
     while valid_proof(last_hash, proof) is False:
@@ -46,9 +48,9 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    guess = f'{proof}'.encode()
+    guess = (str(last_hash) + str(proof)).encode()
+    # print(guess)
     guess_hash = hashlib.sha256(guess).hexdigest()
-    # print(type(guess_hash[0]), 'type')
     if guess_hash[:6] == '0' * 6:
         print(guess_hash, last_hash, 'hashes')
         return guess_hash
@@ -76,23 +78,28 @@ if __name__ == '__main__':
     #     exit()
     # Run forever until interrupted
 
-    headers = {'Authorization': 'Token 9886d9de14212034c6646d9ea18c7975ce07bede'}
+    headers = {'Authorization': 'Token 9886d9de14212034c6646d9ea18c7975ce07bede', 'Content-Type': 'application/json'}
 
     while True:
         # Get the last proof from the server
         time.sleep(1)
-        r = requests.get(url=node + "/last_proof", headers=headers)
+        r = requests.get(url=node + "last_proof", headers=headers)
         print('get', r.json())
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
 
+        print(new_proof, 'successful proof')
+
         post_data = {"proof": new_proof}
 
-        r = requests.post(url=node + "/mine", headers=headers, data=post_data)
+        r = requests.post(url=node + "mine", headers=headers, json=post_data)
         print('post', r.json())
         data = r.json()
-        if data.get('message') == 'New Block Forged':
-            coins_mined += 1
-            print("Total coins mined: " + str(coins_mined))
-        else:
-            print(data.get('message'))
+
+        if data.get('errors'):
+            print('invalid proof cooldown')
+            time.sleep(46)
+            # coins_mined += 1
+            # print("Total coins mined: " + str(coins_mined))
+        # else:
+        #     print(data.get('message'))

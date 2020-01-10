@@ -18,13 +18,6 @@ import {
 
 import styled, { css } from 'styled-components';
 
-const ControlsContainer = styled.div`
-	margin-bottom: 20px;
-	display: flex;
-	justify-content: stretch;
-	align-items:center;
-`;
-
 const Cooldown = styled.h1`
 	display: flex;
 	justify-content: center;
@@ -38,28 +31,21 @@ const Cooldown = styled.h1`
 		`};
 `;
 
-const Movement = styled.div`
-	margin-bottom: 25px;
-`;
-
-const Actions = styled.div``;
-
 const Button = styled.button`
-	display:flex; 
-	justify-content: column;
 	font-size: 1.4rem;
 	background:white;
 	align-items:center;
-	margin-bottom: 10px;
-	border-radius:10px`;
+	border-radius:10px;
+	margin: 30px;
+`
 
 const DirectionalButton = styled.button`
 	font-size: 1.4rem;
 	background:white;
 	align-items:center;
 	border-radius:10px;
-	height: 40px
-	`
+	height: 30px
+`
 
 const WeastButton = styled.button`
 	font-size: 1.4rem;
@@ -67,15 +53,17 @@ const WeastButton = styled.button`
 	align-items:center;
 	border-radius:10px;
 	width: 49%;
-	height: 40px
-	`
+	height: 30px;
+`
 
 const ManualMovement = styled.p`
 	border: 1px solid white;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
-	`
+	width: 300px;
+	padding: 10px;
+`
 	
 	const Weast = styled.div`
 	display: flex;
@@ -312,13 +300,6 @@ class Controls extends Component {
 
 		// Get status
 		this.props.checkStatus();
-		// this.props.confirmSale()
-		// Get cooldown and timestamp of last action
-		// const cooldown = JSON.parse(localStorage.getItem('cooldown'));
-		// Get traversal
-		// const traversal = JSON.parse(localStorage.getItem('traversal'));
-		// this.props.sellTreasure();
-
 
 
 		const timer = setInterval(this.tick, 100);
@@ -336,46 +317,51 @@ class Controls extends Component {
 	render() {
 		return (
 			<div>
-				<ControlsContainer >
-					<Cooldown yellow={!this.props.busy && this.state.cooldown < 0}>
-						{this.props.busy
-							? 'Working...'
-							: this.state.cooldown >= 0
-							? `Cooldown: ${this.state.cooldown.toFixed(0)}s`
-							: `Cooldown: ${-this.state.cooldown.toFixed(0)}s ago`}
-					</Cooldown>
-					<Movement>
-						<Button
-							onClick={() => {
-								this.setState({ autoDiscover: !this.state.autoDiscover });
-								console.log('autoDiscover', !this.state.autoDiscover);
-							}}
-						>
-							Discover Rooms
-						</Button>
-						<Button>Collect Treasure</Button>
-						<Button>Return to Shop</Button>
-						<Button>Move to Room</Button>
-					</Movement>
 
-					<Actions>
-						<Button onClick={()=>this.props.sellTreasure("User 20306")}>Auto Sell</Button>
-						<Button onClick={()=>this.props.confirmSale("User 20306")}  >Confirm sell</Button>
-						{/* <Button>Set Max Encumbrance</Button> */}
-						<Button onClick={this.props.checkStatus}>Update Your Status</Button>
-						<Button>Change Your Name</Button>
-					</Actions>
+				<Button onClick={() => console.log(this.props.currentRoom)} />
 
-				</ControlsContainer>
+				<Button
+					onClick={() => {
+						this.setState({ autoDiscover: !this.state.autoDiscover });
+						console.log('autoDiscover', !this.state.autoDiscover);
+					}}
+				>
+					Discover Rooms
+				</Button>
 
-				<ManualMovement>
-					<DirectionalButton onClick = {() => this.manualMove('n')}>N</DirectionalButton>
-					<Weast>
-						<WeastButton onClick = {() => this.manualMove('w')}>W</WeastButton>
-						<WeastButton onClick = {() => this.manualMove('e')}>E</WeastButton>
-					</Weast>
-					<DirectionalButton onClick = {() => this.manualMove('s')}>S</DirectionalButton>
-				</ManualMovement>
+				<div>
+
+					<div>
+						<h1>Room Title: {this.props.currentRoom.title}</h1>
+						<h1>Room Description: {this.props.currentRoom.description}</h1>
+						<h1>Room ID: {this.props.currentRoom.room_id} Coordinates: {this.props.currentRoom.coordinates}</h1>
+						<h1>Players in room: {this.props.currentRoom.players}</h1>
+						<h1>Items in room: {this.props.currentRoom.items}</h1>
+					</div>
+
+					<ManualMovement>
+
+						<Cooldown yellow={!this.props.busy && this.state.cooldown < 0}>
+							{this.props.busy
+								? 'Working...'
+								: this.state.cooldown >= 0
+								? `Cooldown: ${this.state.cooldown.toFixed(0)}s`
+								: `Cooldown: ${-this.state.cooldown.toFixed(0)}s ago`}
+						</Cooldown>
+
+						<DirectionalButton onClick = {() => this.manualMove('n')}>N</DirectionalButton>
+
+						<Weast>
+							<WeastButton onClick = {() => this.manualMove('w')}>W</WeastButton>
+							<WeastButton onClick = {() => this.manualMove('e')}>E</WeastButton>
+						</Weast>
+
+						<DirectionalButton onClick = {() => this.manualMove('s')}>S</DirectionalButton>
+
+					</ManualMovement>
+
+				</div>
+
 
 			</div>
 		);
